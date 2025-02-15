@@ -2,16 +2,21 @@ import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
-    "lazygit.openLazygit",
-    openLazygit
+    "lf.open",
+    lfOpenFile
   );
-
   context.subscriptions.push(disposable);
 }
 
-async function openLazygit() {
-  if (!(await focusActiveLazygitInstance())) {
-    await newLazygitInstance();
+async function lfOpenFile() {
+  const editor = vscode.window.activeTextEditor;
+  const currentFile = editor?.document.uri.fsPath;
+  if (!currentFile) {
+    return;
+  }
+
+  if (!(await focusActiveLfInstance(currentFile))) {
+    await newLfInstance(currentFile);
   }
 }
 
@@ -19,17 +24,18 @@ async function openLazygit() {
  * Tries to find an instance and focus on the tab.
  * @returns If an instance was found and focused
  */
-async function focusActiveLazygitInstance(): Promise<boolean> {
-  for (let openTerminal of vscode.window.terminals) {
-    if (openTerminal.name === "lazygit") {
-      openTerminal.show();
+async function focusActiveLfInstance(file: string): Promise<boolean> {
+  for (let terminal of vscode.window.terminals) {
+    if (terminal.name === "lf") {
+      terminal.sendText(`$lf -remote "send $id select ${file}"`);
+      terminal.show();
       return true;
     }
   }
   return false;
 }
 
-async function newLazygitInstance() {
+async function newLfInstance(file: string) {
   // Always create a new terminal
   await vscode.commands.executeCommand(
     "workbench.action.terminal.newInActiveWorkspace"
@@ -40,14 +46,13 @@ async function newLazygitInstance() {
   // Read the command from the configuration
   const command = vscode.workspace
     .getConfiguration()
-    .get<string>("lazygit.command", "lazygit && exit");
-  terminal.sendText(command);
+    .get<string>("lf.command", "lf");
+  terminal.sendText(`${command} ${file}`);
   terminal.show();
-
 
   const openInEditor = vscode.workspace
     .getConfiguration()
-    .get<boolean>("lazygit.openInEditor", true);
+    .get<boolean>("lf.openInEditor", false);
 
   if (!openInEditor) {
     return;
