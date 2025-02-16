@@ -1,6 +1,8 @@
 # Lf for VSCode
 
-This is an extension that allows you to open lf in your VSCode instance.
+
+This is an extension that allows you to open [lf](https://github.com/gokcehan/lf) by gokcehan in your VSCode instance.
+
 
 ## Commands and Settings
 
@@ -44,3 +46,5 @@ cmd sel ${{
 
 This extension is a fork of the original [lazygit-for-vscode](https://github.com/Chaitanya-Shahare/lazygit-for-vscode) repository by Chaitanya Shahare.
 Kudos to him for the template <3.
+
+Also obviously thanks to gokcehan for creating lf <3 you da real MVP.
