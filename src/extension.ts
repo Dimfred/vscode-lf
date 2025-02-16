@@ -27,7 +27,11 @@ async function lfOpenFile() {
 async function focusActiveLfInstance(file: string): Promise<boolean> {
   for (let terminal of vscode.window.terminals) {
     if (terminal.name === "lf") {
-      terminal.sendText(`$lf -remote "send $id select ${file}"`);
+      const commandTemplate = vscode.workspace
+        .getConfiguration()
+        .get<string>("lf.focusCommand", '$lf -remote "send $id select ${file}"');
+      const command = commandTemplate.replace("${file}", file);
+      terminal.sendText(command);
       terminal.show();
       return true;
     }
@@ -44,10 +48,11 @@ async function newLfInstance(file: string) {
   let terminal = vscode.window.activeTerminal!;
 
   // Read the command from the configuration
-  const command = vscode.workspace
+  const commandTemplate = vscode.workspace
     .getConfiguration()
-    .get<string>("lf.command", "lf");
-  terminal.sendText(`${command} ${file}`);
+    .get<string>("lf.command", "lf ${file}");
+  const command = commandTemplate.replace("${file}", file);
+  terminal.sendText(command);
   terminal.show();
 
   const openInEditor = vscode.workspace
