@@ -3,7 +3,7 @@
     "displayName": "Lf for VSCode",
     "publisher": "dimfred",
     "description": "",
-    "version": "0.0.3",
+    "version": "0.0.7",
     "repository": {
         "type": "git",
         "url": "https://github.com/dimfred/vscode-lf"
@@ -21,6 +21,10 @@
             {
                 "command": "lf.open",
                 "title": "Lf: open"
+            },
+            {
+                "command": "lf.focus",
+                "title": "Lf: focus (without focusing current file)"
             }
         ],
         "keybindings": [],

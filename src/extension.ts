@@ -3,19 +3,25 @@ import * as vscode from "vscode";
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "lf.open",
-    lfOpenFile
+    () => lfOpenFile(true)
+  );
+  context.subscriptions.push(disposable);
+
+  disposable = vscode.commands.registerCommand(
+    "lf.focus",
+    () => lfOpenFile(false)
   );
   context.subscriptions.push(disposable);
 }
 
-async function lfOpenFile() {
+async function lfOpenFile(openFile: boolean) {
   const editor = vscode.window.activeTextEditor;
   const currentFile = editor?.document.uri.fsPath;
   if (!currentFile) {
     return;
   }
 
-  if (!(await focusActiveLfInstance(currentFile))) {
+  if (!(await focusActiveLfInstance(openFile ? currentFile : null))) {
     await newLfInstance(currentFile);
   }
 }
@@ -24,14 +30,16 @@ async function lfOpenFile() {
  * Tries to find an instance and focus on the tab.
  * @returns If an instance was found and focused
  */
-async function focusActiveLfInstance(file: string): Promise<boolean> {
+async function focusActiveLfInstance(file?: string): Promise<boolean> {
   for (let terminal of vscode.window.terminals) {
     if (terminal.name === "lf") {
       const commandTemplate = vscode.workspace
         .getConfiguration()
         .get<string>("lf.focusCommand", '$lf -remote "send $id select ${file}"');
       const command = commandTemplate.replace("${file}", file);
-      terminal.sendText(command);
+      if (file) {
+        terminal.sendText(command);
+      }
       terminal.show();
       return true;
     }

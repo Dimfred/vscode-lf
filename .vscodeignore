@@ -1,6 +1,14 @@
+.git/
 .vscode/**
 .vscode-test/**
-src/**
+.version
+src/
+out/
+images/
+changelog.md
+Makefile
+esbuild.js
+.github
 .gitignore
 .yarnrc
 vsc-extension-quickstart.md

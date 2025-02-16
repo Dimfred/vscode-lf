@@ -8,7 +8,9 @@ This is an extension that allows you to open [lf](https://github.com/gokcehan/lf
 
 ```jsonc
 {
-  "command": "lf.open",
+  "command": "lf.open", // open the current file in lf
+  "command": "lf.focus", // focus the lf window, if none exists open the current file
+
   "settings": {
     "lf.command": "lf",
     "lf.focusCommand": "$lf -remote \"send $id select ${file}\"",
