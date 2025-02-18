@@ -20,11 +20,18 @@
     "commands": [
       {
         "command": "lf.open",
-        "title": "Lf: open"
+        "title": "Lf: open",
+        "description": "Open the current selected file in lf (will reuse existing sessions)"
       },
       {
         "command": "lf.focus",
-        "title": "Lf: focus (without focusing current file)"
+        "title": "Lf: focus (without focusing current file)",
+        "description": "Focus the active lf instance without changing the, or open a new one if none available"
+      },
+      {
+        "command": "lf.openFolder",
+        "title": "Lf: open folder",
+        "description": "Open the specified folder in lf"
       }
     ],
     "keybindings": [],
